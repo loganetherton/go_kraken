@@ -65,19 +65,26 @@ func (api *Kraken) prepareRequest(method string, isPrivate bool, data url.Values
 	if data == nil {
 		data = url.Values{}
 	}
+	var req *http.Request
+	var err error
 	requestURL := ""
 	requestMethod := ""
 	if isPrivate {
 		requestURL = fmt.Sprintf("%s/%s/private/%s", APIUrl, APIVersion, method)
 		data.Set("nonce", fmt.Sprintf("%d", time.Now().UnixNano()))
 		requestMethod = "POST"
+		req, err = http.NewRequest(requestMethod, requestURL, strings.NewReader(data.Encode()))
+		if err != nil {
+			return nil, errors.Wrap(err, "error during request creation")
+		}
 	} else {
 		requestURL = fmt.Sprintf("%s/%s/public/%s", APIUrl, APIVersion, method)
 		requestMethod = "GET"
-	}
-	req, err := http.NewRequest(requestMethod, requestURL, strings.NewReader(data.Encode()))
-	if err != nil {
-		return nil, errors.Wrap(err, "error during request creation")
+		req, err = http.NewRequest(requestMethod, requestURL, nil)
+		if err != nil {
+			return nil, errors.Wrap(err, "error during request creation")
+		}
+		req.URL.RawQuery = data.Encode()
 	}
 
 	if isPrivate {
