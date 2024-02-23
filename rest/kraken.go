@@ -66,13 +66,16 @@ func (api *Kraken) prepareRequest(method string, isPrivate bool, data url.Values
 		data = url.Values{}
 	}
 	requestURL := ""
+	requestMethod := ""
 	if isPrivate {
 		requestURL = fmt.Sprintf("%s/%s/private/%s", APIUrl, APIVersion, method)
 		data.Set("nonce", fmt.Sprintf("%d", time.Now().UnixNano()))
+		requestMethod = "POST"
 	} else {
 		requestURL = fmt.Sprintf("%s/%s/public/%s", APIUrl, APIVersion, method)
+		requestMethod = "GET"
 	}
-	req, err := http.NewRequest("POST", requestURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(requestMethod, requestURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, errors.Wrap(err, "error during request creation")
 	}
