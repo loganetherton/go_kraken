@@ -7,7 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	ws "github.com/aopoltorzhicky/go_kraken/websocket"
+	ws "github.com/loganetherton/go_kraken/websocket"
 )
 
 func main() {

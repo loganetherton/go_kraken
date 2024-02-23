@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aopoltorzhicky/go_kraken/rest"
 	"github.com/gorilla/websocket"
+	"github.com/loganetherton/go_kraken/rest"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
